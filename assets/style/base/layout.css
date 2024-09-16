@@ -1,0 +1,18 @@
+.container {
+  padding: 1em;
+  margin: auto;
+}
+
+.app-header {
+  display:  grid;
+  grid-auto-flow: column;
+}
+
+.nav-bar {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 1em;
+
+  justify-self: end;
+  align-self: center;
+}
