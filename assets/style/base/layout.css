@@ -4,7 +4,7 @@
 }
 
 .app-header {
-  display:  grid;
+  display: grid;
   grid-auto-flow: column;
 }
 
@@ -15,4 +15,26 @@
 
   justify-self: end;
   align-self: center;
+}
+
+.book-list {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 1em;
+}
+
+.book-list>.book-preview {
+  display: grid;
+  align-items: center;
+}
+
+.book-list>.book-preview>h3{
+  display: grid;
+  align-items: center;
+}
+
+.book-preview>.btn-container {
+  display: grid;
+  grid-auto-flow: column;
 }
