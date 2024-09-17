@@ -3,7 +3,7 @@ import { storageService } from './async-storage.service.js'
 import { defaultBooks } from '../services/books.js'
 
 const storageKey = 'BookDB'
-var gFilterBy = { txt: '', minSpeed: 0 }
+var gFilterBy = { text: '' }
 
 export const bookService = {
     query,
@@ -21,10 +21,10 @@ function query() {
                 utilService.saveToStorage(storageKey, defaultBooks)
                 return utilService.loadFromStorage(storageKey)
             }
-            // if (gFilterBy.txt) {
-            //     const regex = new RegExp(gFilterBy.txt, 'i')
-            //     books = books.filter(book => regex.test(book.title))
-            // }
+            if (gFilterBy.text) {
+                const regex = new RegExp(gFilterBy.text, 'i')
+                books = books.filter(book => regex.test(book.title))
+            }
             return books
         })
 }
@@ -50,7 +50,6 @@ function getFilterBy() {
 }
 
 function setFilterBy(filterBy = {}) {
-    if (filterBy.txt !== undefined) gFilterBy.txt = filterBy.txt
-    if (filterBy.minSpeed !== undefined) gFilterBy.minSpeed = filterBy.minSpeed
+    if (filterBy.text !== undefined) gFilterBy.text = filterBy.text
     return gFilterBy
 }

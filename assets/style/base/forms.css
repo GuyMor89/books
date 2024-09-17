@@ -18,7 +18,3 @@ button:hover {
     border: 2px solid hsl(0, 0%, 70%);
 }
 
-input:focus {
-    background-color: var(--clr1bg);
-    transition: background-color 1s;
-}
