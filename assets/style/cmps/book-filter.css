@@ -2,18 +2,21 @@
     margin-block-end: 1em;
 }
 
-.filter-container>form {
+.filter-container>fieldset {
+    padding-block: 0.5em;
+    padding-inline: 1em;
+
     width: fit-content;
 
-    font-size: 1.35em;
-}
+    border: 2px solid hsl(0, 0%, 86%);
+    border-radius: 5px;
+    background-color: hsl(0, 0%, 98%);
 
-.filter-container>form>label {
+    font-size: 1.5em;
     font-weight: 600;
-    font-size: 1.1em;
 }
 
-.filter-container>form>input {
+.filter-container>fieldset>input {
     padding-block: 0.25em;
     padding-inline-start: 0.35em;
 
@@ -26,5 +29,11 @@
         1px 1px 5px 0px rgba(0, 0, 0, 0.1);
 
     outline: none;
+
+    transition: background-color 300ms;
+}
+
+.filter-container>fieldset>input:hover {
+    background-color: hsl(0, 0%, 98%);
 
 }

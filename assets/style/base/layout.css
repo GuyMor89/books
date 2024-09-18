@@ -25,7 +25,7 @@
 
 }
 
-.filter-container>form {
+.filter-container>fieldset {
   display: grid;
   grid-auto-flow: column;
   place-items: center;
@@ -45,7 +45,7 @@
   align-items: center;
 }
 
-.book-list>.book-preview>h3{
+.book-list>.book-preview>h3 {
   display: grid;
   align-items: center;
 }
@@ -53,4 +53,16 @@
 .book-preview>.btn-container {
   display: grid;
   grid-auto-flow: column;
+}
+
+.book-details-container {
+  display: grid;
+  justify-items: center;
+
+}
+
+.book-details {
+  display: grid;
+  justify-items: center;
+  
 }

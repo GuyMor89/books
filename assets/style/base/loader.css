@@ -1,3 +1,13 @@
+.loader-container {
+    position: relative;
+    
+    border: 2px solid hsl(0, 0%, 90%);
+    border-radius: 5px;
+    background-color: hsl(0, 0%, 96%);
+
+    height: 75vh;
+}
+
 .loader {
     position: absolute;
 

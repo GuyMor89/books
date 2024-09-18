@@ -1,0 +1,8 @@
+.book-list {
+    padding: 1em;
+
+    border: 2px solid hsl(0, 0%, 90%);
+    border-radius: 5px;
+
+    background-color: hsl(0, 0%, 98%);
+}
