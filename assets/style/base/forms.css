@@ -1,10 +1,9 @@
 button {
-    margin: 0.4em;
     padding: 0.4em 0.6em;
 
-    background-color: rgb(237, 216, 228);
+    background-color: hsl(326, 37%, 94%);
     border: 2px solid hsl(0, 0%, 80%);
-    border-radius: 3px;   
+    border-radius: 5px;   
 
     font-size: 1.1em;
 
@@ -14,7 +13,37 @@ button {
 }
 
 button:hover {
-    background-color: rgb(221, 195, 208);
-    border: 2px solid hsl(0, 0%, 70%);
+    background-color: hsl(330, 37%, 88%);
+    border: 2px solid hsl(0, 0%, 60%);
 }
 
+input[type="range"] {
+    padding: 0;
+    margin: 0.5em;
+    appearance: none;
+    height: 0px;
+    border: none;
+    outline: none;
+}
+
+input[type="range"]::-webkit-slider-runnable-track {
+    /* width: 100%; */
+    padding: 0;
+    height: 13px;
+    cursor: pointer;
+    background: var(--clr1);
+    border-radius: 5px;
+    margin-block-start: 3px;
+
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    background: #ffffff;
+    cursor: pointer;
+    border-radius: 50%;
+    border: 2px solid #333;
+    margin-block-start: -5px;
+}

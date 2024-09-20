@@ -25,6 +25,9 @@ function query() {
                 const regex = new RegExp(gFilterBy.text, 'i')
                 books = books.filter(book => regex.test(book.title))
             }
+            if (gFilterBy.price) {
+                books = books.filter(book => book.listPrice.amount > +gFilterBy.price)
+            }
             return books
         })
 }
@@ -51,5 +54,6 @@ function getFilterBy() {
 
 function setFilterBy(filterBy = {}) {
     if (filterBy.text !== undefined) gFilterBy.text = filterBy.text
+    if (filterBy.price !== undefined) gFilterBy.price = filterBy.price
     return gFilterBy
 }
