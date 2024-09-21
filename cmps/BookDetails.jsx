@@ -1,3 +1,4 @@
+import { LongText } from "./LongText.jsx"
 
 export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
 
@@ -39,7 +40,7 @@ export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
                     {isOnSale && <span>On Sale</span>}
                 </div>
                 <h6>({publishedDate}) - {evaluateBookAge()}</h6>
-                <h4>{description}</h4>
+                <LongText text={description} />
                 <span className={evaluatePriceColor()}>{amount} {currencyCode}</span>
                 <div className="btn-container">
                     <button onClick={() => changeChosenBook(event, 'back')}>Back</button>

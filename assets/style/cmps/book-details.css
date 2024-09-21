@@ -38,6 +38,13 @@
     text-decoration: underline;
 }
 
+.book-details>h4:first-of-type {
+    margin-block-start: 0.5em;
+
+    font-size: 1.5em;
+    font-family: Playwrite-Regular;
+}
+
 .book-details>h5 {
     margin-block-end: 1em;
 
@@ -86,7 +93,8 @@
 }
 
 .book-details>h4 {
-    margin-block: 1em;
+    margin-block-start: 1em;
+    margin-block-end: 0;
 
     width: 75%;
 
@@ -96,11 +104,17 @@
     text-wrap: pretty;
 }
 
-.book-details>h4:first-of-type {
-    margin-block-start: 0.5em;
+.book-details>span:first-of-type {
+    margin-block-start: 0.25em;
 
-    font-size: 1.5em;
-    font-family: Playwrite-Regular;
+    font-size: 1em;
+
+    cursor: pointer;
+    box-shadow: none;
+
+    background-color: hsl(0, 0%, 100%);
+    border: none;
+
 }
 
 .book-details>span {
