@@ -2,7 +2,7 @@ const { useState, useEffect } = React
 
 export function BookEdit({ chosenBook, changeIsEditing, editBook }) {
 
-    const { title, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = chosenBook
+    const { title, subtitle, description, pageCount, publishedDate, listPrice } = chosenBook
     const { isOnSale, currencyCode, amount } = listPrice
 
     const [formData, setFormData] = useState({

@@ -20,6 +20,14 @@ export function App() {
                 {page === 'home' && <Home />}
                 {page === 'book' && <BookIndex />}
             </main>
+            <footer>
+                <div></div>
+                <div>Copyright
+                    <i className="fa-regular fa-copyright"></i>
+                    2024<span data-i18n="footerBy">by Guy Mor</span>
+                </div>
+                <a></a>
+            </footer>
         </section>
     )
 }

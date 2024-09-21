@@ -39,12 +39,19 @@
   gap: 1em;
 }
 
-.book-list>.book-preview {
+.empty-books {
+  grid-column: 3/4;
   display: grid;
-  align-items: center;
+  justify-items: center;
 }
 
-.book-list>.book-preview>h3 {
+.book-preview {
+  display: grid;
+  align-items: center;
+  justify-items: center;
+}
+
+.book-preview>h3 {
   display: grid;
   align-items: center;
 }
@@ -109,4 +116,15 @@
 
 .book-edit>.btn-container {
   grid-column: 1/3
+}
+
+
+
+
+footer {
+  display: grid;
+  grid-auto-flow: column;
+
+  justify-items: center;
+  align-items: center;
 }

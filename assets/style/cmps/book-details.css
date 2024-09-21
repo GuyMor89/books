@@ -96,6 +96,13 @@
     text-wrap: pretty;
 }
 
+.book-details>h4:first-of-type {
+    margin-block-start: 0.5em;
+
+    font-size: 1.5em;
+    font-family: Playwrite-Regular;
+}
+
 .book-details>span {
     padding-block: 0.15em;
     padding-inline: 0.35em;

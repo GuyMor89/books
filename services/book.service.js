@@ -22,8 +22,10 @@ function query() {
                 return utilService.loadFromStorage(storageKey)
             }
             if (gFilterBy.text) {
+                console.log(gFilterBy.text)
                 const regex = new RegExp(gFilterBy.text, 'i')
                 books = books.filter(book => regex.test(book.title))
+                console.log(books)
             }
             if (gFilterBy.price) {
                 books = books.filter(book => book.listPrice.amount > +gFilterBy.price)

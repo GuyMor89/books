@@ -1,7 +1,7 @@
 
 export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
 
-    const { title, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = chosenBook
+    const { title, authors, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = chosenBook
     const { isOnSale, currencyCode, amount } = listPrice
 
     function evaluateBookDifficulty() {
@@ -32,6 +32,7 @@ export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
             <div className="book-details">
                 <h2>{title}</h2>
                 <h3>{subtitle}</h3>
+                <h4>{[...authors]}</h4>
                 <h5>{evaluateBookDifficulty()} ({pageCount} p.)</h5>
                 <div className="image-container">
                     <img src={thumbnail}></img>
