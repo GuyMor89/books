@@ -1,9 +1,33 @@
+import { bookService } from "../services/book.service.js"
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { LongText } from "./LongText.jsx"
+import { Loader } from "./Loader.jsx"
 
-export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
+const { useState, useEffect } = React
+const { useParams, useNavigate } = ReactRouterDOM
 
-    const { title, authors, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = chosenBook
-    const { isOnSale, currencyCode, amount } = listPrice
+export function BookDetails({ }) {
+
+    const [book, setBook] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+
+    const params = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        loadBook()
+    }, [params.bookID])
+
+    function loadBook() {
+        bookService.get(params.bookID)
+            .then(setBook)
+            .then(() => setIsLoading(false))
+            .catch(err => {
+                console.log('Error: Couldn\'t find book..', err)
+                showErrorMsg('Error: Couldn\'t find book..')
+                navigate('/books')
+            })
+    }
 
     function evaluateBookDifficulty() {
         if (pageCount > 500) return 'Serious Read'
@@ -28,12 +52,25 @@ export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
         }
     }
 
+    function parseAuthors() {
+        const newAuthors = authors.map((author, idx) => {
+            if (idx !== authors.length - 1) return `${author} & `
+            return author
+        })
+        return newAuthors.join('')
+    }
+
+    if (isLoading) return <Loader />
+
+    const { title, authors, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = book
+    const { isOnSale, currencyCode, amount } = listPrice
+
     return (
         <article className="book-details-container">
             <div className="book-details">
                 <h2>{title}</h2>
                 <h3>{subtitle}</h3>
-                <h4>{[...authors]}</h4>
+                <h4>{parseAuthors()}</h4>
                 <h5>{evaluateBookDifficulty()} ({pageCount} p.)</h5>
                 <div className="image-container">
                     <img src={thumbnail}></img>
@@ -43,8 +80,8 @@ export function BookDetails({ chosenBook, changeChosenBook, changeIsEditing }) {
                 <LongText text={description} />
                 <span className={evaluatePriceColor()}>{amount} {currencyCode}</span>
                 <div className="btn-container">
-                    <button onClick={() => changeChosenBook(event, 'back')}>Back</button>
-                    <button onClick={changeIsEditing}>Edit</button>
+                    <button onClick={() => navigate('/books')}>Back</button>
+                    <button onClick={() => navigate(`/books/edit/${book.id}`)}>Edit</button>
                 </div>
             </div>
         </article>

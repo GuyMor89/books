@@ -28,7 +28,7 @@ function query() {
                 console.log(books)
             }
             if (gFilterBy.price) {
-                books = books.filter(book => book.listPrice.amount > +gFilterBy.price)
+                books = books.filter(book => book.listPrice.amount >= +gFilterBy.price)
             }
             return books
         })

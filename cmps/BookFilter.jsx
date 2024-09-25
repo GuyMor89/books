@@ -1,5 +1,11 @@
+const { useEffect } = React
 
 export function BookFilter({ changeFilterBy, filterBy }) {
+
+    useEffect(() => {
+        return (() => changeFilterBy(event, 'reset'))
+    }, [])
+
     return (
         <article className="filter-container">
             <fieldset>

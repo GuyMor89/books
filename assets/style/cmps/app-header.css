@@ -1,10 +1,12 @@
 .app-header {
   background-color: var(--clr1);
   color: var(--clr1bg);
-  padding: 1em;
+  padding: 0.7em;
+  font-size: 1.2em;
 }
 
 a {
-  font-size: 1.5em;
-  font-family: Youtube-Regular;
+  padding-inline-end: 0.5em;
+  font-size: 1.25em;
+  font-family: Edu-Regular;
 }

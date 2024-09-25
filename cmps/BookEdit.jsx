@@ -1,26 +1,55 @@
+import { bookService } from "../services/book.service.js"
+import { Loader } from "./Loader.jsx"
+
 const { useState, useEffect } = React
+const { useParams, useNavigate } = ReactRouterDOM
 
-export function BookEdit({ chosenBook, changeIsEditing, editBook }) {
+export function BookEdit({ }) {
 
-    const { title, subtitle, description, pageCount, publishedDate, listPrice } = chosenBook
-    const { isOnSale, currencyCode, amount } = listPrice
+    const [book, setBook] = useState(null)
+    const [isLoading, setIsLoading] = useState(true)
+    const [formData, setFormData] = useState(null)
 
-    const [formData, setFormData] = useState({
-        title: title,
-        subtitle: subtitle,
-        pageCount: pageCount,
-        publishedDate: publishedDate,
-        description: description,
-        listPrice: { ['amount']: amount, ['isOnSale']: isOnSale, ['currencyCode']: currencyCode }
-    })
+    const params = useParams()
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        loadBook()
+    }, [params.bookID])
+
+    useEffect(() => {
+        if (book) loadFormData()
+    }, [])
+
+    function loadFormData() {
+        setFormData({
+            title: title,
+            subtitle: subtitle,
+            pageCount: pageCount,
+            publishedDate: publishedDate,
+            description: description,
+            listPrice: { ['amount']: amount, ['isOnSale']: isOnSale, ['currencyCode']: currencyCode }
+        })
+    }
+
+    function loadBook() {
+        bookService.get(params.bookID)
+            .then(setBook)
+            .then(() => setIsLoading(false))
+            .catch(err => {
+                console.log('Problem getting book', err)
+                showErrorMsg('Problem getting car')
+                navigate('/books')
+            })
+    }
 
     function updateData(event) {
         const { name, value } = event.target
         const parsedName = name.split('-')[0]
 
         if (parsedName === 'amount') {
-           return setFormData(prevValue => ({
-                ...prevValue, ['listPrice']: {...listPrice, [parsedName]: +value}
+            return setFormData(prevValue => ({
+                ...prevValue, ['listPrice']: { ...listPrice, [parsedName]: +value }
             }))
         }
 
@@ -28,6 +57,24 @@ export function BookEdit({ chosenBook, changeIsEditing, editBook }) {
             ...prevValue, [parsedName]: value
         }))
     }
+
+    function editBook(formData) {
+        setIsLoading(true)
+
+        bookService.get(book.id)
+            .then(result => {
+                const editedBook = { ...result, ...formData }
+                return bookService.save(editedBook)
+            })
+            .then(() => {
+                navigate(`/books/${book.id}`)
+            })
+    }
+
+    if (isLoading) return <Loader />
+
+    const { title, subtitle, description, pageCount, publishedDate, listPrice } = book
+    const { isOnSale, currencyCode, amount } = listPrice
 
     return (
         <article className="book-edit-container">
@@ -48,7 +95,7 @@ export function BookEdit({ chosenBook, changeIsEditing, editBook }) {
                 <label htmlFor="price-edit">Price</label>
                 <input onChange={updateData} type="text" name="amount-edit" id="price-edit" defaultValue={amount} />
                 <div className="btn-container">
-                    <button onClick={() => changeIsEditing('back')}>Back</button>
+                    <button onClick={() => navigate(`/books/edit/${book.id}`)}>Back</button>
                     <button onClick={() => editBook(formData)}>Submit</button>
                 </div>
             </div>

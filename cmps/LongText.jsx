@@ -4,7 +4,7 @@ export function LongText({ text, length = 100 }) {
 
     const [isShort, setIsShort] = useState(true)
 
-    const shortText = text.slice(0, length)
+    const shortText = `${text.slice(0, length)}..`
 
     return (
         <React.Fragment>

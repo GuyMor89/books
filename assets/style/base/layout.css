@@ -118,8 +118,15 @@
   grid-column: 1/3
 }
 
+.not-found-container {
+  display: grid;
+  justify-items: center;
+}
 
-
+.not-found {
+  display: grid;
+  gap: 0.5em;
+}
 
 footer {
   display: grid;
@@ -127,4 +134,9 @@ footer {
 
   justify-items: center;
   align-items: center;
+}
+
+footer>div {
+  display: grid;
+  grid-auto-flow: column;
 }
