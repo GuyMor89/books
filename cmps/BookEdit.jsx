@@ -38,7 +38,7 @@ export function BookEdit({ }) {
             .then(() => setIsLoading(false))
             .catch(err => {
                 console.log('Problem getting book', err)
-                showErrorMsg('Problem getting car')
+                showErrorMsg('Problem getting book')
                 navigate('/books')
             })
     }

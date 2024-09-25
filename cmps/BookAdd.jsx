@@ -1,19 +1,44 @@
 import { bookService } from "../services/book.service.js"
+import { Loader } from "./Loader.jsx"
 
 const { useState, useEffect } = React
 const { useParams, useNavigate } = ReactRouterDOM
 
 export function BookAdd() {
 
+    const [foundBooks, setFoundBooks] = useState(null)
+    const [booksToDisplay, setBooksToDisplay] = useState(null)
     const [isLoading, setIsLoading] = useState(true)
 
     const params = useParams()
+    const navigate = useNavigate()
 
-    function addBook() {
+    useEffect(() => {
+        searchForBooks()
+    }, [])
+
+    console.log(foundBooks)
+
+    function searchForBooks() {
         setIsLoading(true)
 
         const API_PREFIX = 'https://openlibrary.org/search.json?q='
-        const API_URL = `${API_PREFIX}${filterBy.text}`
+        const API_URL = `${API_PREFIX}${params.searchText}`
+
+        fetch(API_URL)
+            .then(result => result.json())
+            .then(result => {
+                const firstTenBooks = result.docs.slice(0, 10)
+                const parsedBooks = firstTenBooks.map(({ title, author_name }) => ({ title, author: author_name[0] }))
+                setFoundBooks(firstTenBooks)
+                setBooksToDisplay(parsedBooks)
+                setIsLoading(false)
+            })
+    }
+
+    function addBook(chosenTitle) {
+        setIsLoading(true)
+        const chosenBook = foundBooks.find(book => book.title === chosenTitle)
 
         const bookTemplate = {
             "id": "",
@@ -32,27 +57,29 @@ export function BookAdd() {
                 "isOnSale": false
             }
         }
-        fetch(API_URL)
-            .then(result => result.json())
+
+        const { title, author_name, first_publish_year, number_of_pages_median, cover_i } = chosenBook
+        const data = { title, authors: author_name, publishedDate: first_publish_year, pageCount: number_of_pages_median, coverID: cover_i }
+        const imgURL = { thumbnail: `https://covers.openlibrary.org/b/id/${data.coverID}-L.jpg` }
+
+        const newBook = { ...bookTemplate, ...data, ...imgURL }
+        bookService.save(newBook)
             .then(result => {
-                console.log(result)
-
-                const { title, author_name, first_publish_year, number_of_pages_median, cover_i } = result.docs[0]
-                const data = { title, authors: author_name, publishedDate: first_publish_year, pageCount: number_of_pages_median, coverID: cover_i }
-                const imgURL = { thumbnail: `https://covers.openlibrary.org/b/id/${data.coverID}-L.jpg` }
-
-                const newBook = { ...bookTemplate, ...data, ...imgURL }
-                // return bookService.save(newBook)
+                navigate(`/books/${result.id}`)
             })
-        // .then(result => {
-        //     setFilterBy({ text: '', price: '' })
-        //     bookService.setFilterBy({ text: '', price: '' })
-        //     setIsLoading(false)
-        //     navigate(`/books/${result.id}`)
-        // })
     }
 
+    if (isLoading) return <Loader />
+
     return (
-        <div></div>
+        <article className="book-add">
+            {booksToDisplay && booksToDisplay.map(({ title, author }, idx) =>
+                <div key={idx}>
+                    <h2>{title} <span>by {author}</span></h2>
+                    <button onClick={() => addBook(title)}>Add Book</button>
+                </div>
+            )}
+            <button onClick={() => navigate('/books')}>Back</button>
+        </article>
     )
 }

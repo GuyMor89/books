@@ -22,4 +22,5 @@
 @import 'cmps/book-filter.css';
 @import 'cmps/book-details.css';
 @import 'cmps/book-edit.css';
-@import 'cmps/not-found.css'
+@import 'cmps/not-found.css';
+@import 'cmps/book-add.css'

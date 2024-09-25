@@ -118,6 +118,29 @@
   grid-column: 1/3
 }
 
+.book-add {
+  display: grid;
+
+  justify-items: center;
+
+  gap: 0.5em;
+}
+
+.book-add>div {
+  display: grid;
+  grid-template-columns: 5fr 1fr;
+}
+
+.book-add>h2 {
+  justify-self: start;
+}
+
+.book-add>div>button {
+  grid-column: 2;
+
+  justify-self: start;
+}
+
 .not-found-container {
   display: grid;
   justify-items: center;
