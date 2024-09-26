@@ -10,3 +10,7 @@
     font-family: Youtube-Regular;
     text-align: center;
 }
+
+.empty-books>button {
+    margin-block-end: 1em;
+}

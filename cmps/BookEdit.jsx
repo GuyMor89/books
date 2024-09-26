@@ -95,7 +95,7 @@ export function BookEdit({ }) {
                 <label htmlFor="price-edit">Price</label>
                 <input onChange={updateData} type="text" name="amount-edit" id="price-edit" defaultValue={amount} />
                 <div className="btn-container">
-                    <button onClick={() => navigate(`/books/edit/${book.id}`)}>Back</button>
+                    <button onClick={() => navigate(`/books/${book.id}`)}>Back</button>
                     <button onClick={() => editBook(formData)}>Submit</button>
                 </div>
             </div>

@@ -5,7 +5,7 @@ import { BookFilter } from "./BookFilter.jsx"
 import { Loader } from "./Loader.jsx"
 
 const { useState, useEffect } = React
-const { useNavigate } = ReactRouterDOM
+const { useNavigate, Outlet, useLocation} = ReactRouterDOM
 
 export function BookIndex() {
 
@@ -16,6 +16,9 @@ export function BookIndex() {
     const [isEditing, setIsEditing] = useState(false)
 
     const navigate = useNavigate()
+    const location = useLocation()
+
+    const isRootPath = location.pathname === '/books'
 
     useEffect(() => {
         loadBooks()
@@ -93,7 +96,7 @@ export function BookIndex() {
         <section className="book-index">
             <BookFilter changeFilterBy={changeFilterBy} filterBy={filterBy} />
             {/* {chosenBook && !isEditing && <BookDetails chosenBook={chosenBook} changeChosenBook={changeChosenBook} changeIsEditing={changeIsEditing} />} */}
-            <BookList books={books} filterBy={filterBy} />
+            {isRootPath ? (<BookList books={books} filterBy={filterBy} />) : (<Outlet />)}
             {/* {chosenBook && isEditing && <BookEdit chosenBook={chosenBook} changeIsEditing={changeIsEditing} editBook={editBook} />} */}
         </section>
     )

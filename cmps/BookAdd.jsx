@@ -1,6 +1,8 @@
 import { bookService } from "../services/book.service.js"
 import { Loader } from "./Loader.jsx"
 
+import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+
 const { useState, useEffect } = React
 const { useParams, useNavigate } = ReactRouterDOM
 
@@ -15,7 +17,7 @@ export function BookAdd() {
 
     useEffect(() => {
         searchForBooks()
-    }, [])
+    }, [params.searchText])
 
     console.log(foundBooks)
 
@@ -34,29 +36,18 @@ export function BookAdd() {
                 setBooksToDisplay(parsedBooks)
                 setIsLoading(false)
             })
+            .catch(error => {
+                console.error(error)
+                showErrorMsg('Cannot find book..')
+                navigate('/books')
+            })
     }
 
     function addBook(chosenTitle) {
         setIsLoading(true)
-        const chosenBook = foundBooks.find(book => book.title === chosenTitle)
 
-        const bookTemplate = {
-            "id": "",
-            "title": "",
-            "subtitle": "",
-            "authors": "",
-            "publishedDate": 0,
-            "description": "",
-            "pageCount": 0,
-            "categories": "",
-            "thumbnail": "",
-            "language": "en",
-            "listPrice": {
-                "amount": 0,
-                "currencyCode": "USD",
-                "isOnSale": false
-            }
-        }
+        const chosenBook = foundBooks.find(book => book.title === chosenTitle)
+        const bookTemplate = { id: "", title: "", subtitle: "", authors: "", publishedDate: 0, description: "", pageCount: 0, categories: "", thumbnail: "", language: "en", listPrice: { amount: 0, currencyCode: "USD", isOnSale: false } }
 
         const { title, author_name, first_publish_year, number_of_pages_median, cover_i } = chosenBook
         const data = { title, authors: author_name, publishedDate: first_publish_year, pageCount: number_of_pages_median, coverID: cover_i }
@@ -65,6 +56,7 @@ export function BookAdd() {
         const newBook = { ...bookTemplate, ...data, ...imgURL }
         bookService.save(newBook)
             .then(result => {
+                showSuccessMsg('Book added!')
                 navigate(`/books/${result.id}`)
             })
     }
