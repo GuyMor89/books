@@ -5,6 +5,7 @@ import { BookEdit } from './cmps/BookEdit.jsx'
 import { UserMsg } from './cmps/UserMsg.jsx'
 import { NotFound } from './cmps/NotFound.jsx'
 import { BookAdd } from './cmps/BookAdd.jsx'
+import { BookReviews } from './cmps/BookReviews.jsx'
 
 const Router = ReactRouterDOM.HashRouter
 const { Routes, Route, Navigate, Link, NavLink } = ReactRouterDOM
@@ -28,7 +29,9 @@ export function App() {
                         <Route path="/books" element={<BookIndex />}>
                             <Route path="/books/add/:searchText" element={<BookAdd />} />
                         </Route>
-                        <Route path="/books/:bookID" element={<BookDetails />} />
+                        <Route path="/books/:bookID" element={<BookDetails />}>
+                            <Route path="reviews" element={<BookReviews />} />
+                        </Route>
                         <Route path="/books/edit/:bookID" element={<BookEdit />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>

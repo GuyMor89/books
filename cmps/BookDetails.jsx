@@ -5,22 +5,24 @@ import { AddReview } from "./AddReview.jsx"
 import { Loader } from "./Loader.jsx"
 
 const { useState, useEffect } = React
-const { useParams, useNavigate } = ReactRouterDOM
+const { useParams, useNavigate, Outlet, useLocation } = ReactRouterDOM
 
 export function BookDetails({ }) {
 
     const [book, setBook] = useState(null)
     const [prevBook, setPrevBook] = useState(null)
     const [nextBook, setNextBook] = useState(null)
-    const [isAdding, setIsAdding] = useState(false)
     const [areReviewsOpen, setAreReviewsOpen] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
 
     const params = useParams()
     const navigate = useNavigate()
+    const location = useLocation()
 
     useEffect(() => {
         loadBooks()
+        setAreReviewsOpen(false)
+        if (location.pathname === `/books/${params.bookID}/reviews`) setAreReviewsOpen(true)
     }, [params.bookID])
 
     function loadBooks() {
@@ -37,16 +39,6 @@ export function BookDetails({ }) {
                 showErrorMsg('Error: Couldn\'t find book..')
                 navigate('/books')
             })
-    }
-
-    function removeReview(bookID, reviewID) {
-        bookService.get(bookID)
-            .then(result => {
-                const newReviews = result.reviews.filter(review => review.id !== reviewID)
-                const newBook = { ...result, reviews: newReviews }
-                return bookService.save(newBook)
-            })
-            .then(result => setBook(result))
     }
 
     function evaluateBookDifficulty() {
@@ -80,16 +72,6 @@ export function BookDetails({ }) {
         return newAuthors.join('')
     }
 
-    function StarRating({ rating }) {
-        return (
-            <span>
-                {Array.from({ length: +rating }, (_, index) => (
-                    <i key={index} className="fa-solid fa-star"></i>
-                ))}
-            </span>
-        )
-    }
-
     if (isLoading) return <Loader />
 
     const { title, authors, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = book
@@ -115,23 +97,13 @@ export function BookDetails({ }) {
                 <h6>({publishedDate}) - {evaluateBookAge()}</h6>
                 <LongText text={description} />
                 <span className={evaluatePriceColor()}>{amount} {currencyCode}</span>
-                <button onClick={() => setAreReviewsOpen(!areReviewsOpen)}>{!areReviewsOpen && 'Open'} {areReviewsOpen && 'Close'} Reviews</button>
-                {areReviewsOpen &&
-                    <div className="book-review-container">
-                        <button onClick={() => setIsAdding(true)}>Add Review</button>
-                        {isAdding && <AddReview book={book} setBook={setBook} setIsAdding={setIsAdding} />}
-                        <h2>Reviews</h2>
-                        {book.reviews && book.reviews.length === 0 && !isAdding && <h3>No Reviews..</h3>}
-                        {book.reviews && book.reviews.map(({ id, name, rating, readAt, review }) => {
-                            return <div key={id} className="book-review">
-                                <button onClick={() => removeReview(book.id, id)}>X</button>
-                                <h3>Name</h3><span>{name}</span>
-                                <h4>Rating</h4><StarRating rating={rating} />
-                                <h5>Read At</h5><span>{readAt}</span>
-                                <h4>Review</h4><span>{review}</span>
-                            </div>
-                        })}
-                    </div>}
+                <button onClick={() => {
+                    if (areReviewsOpen) navigate(`/books/${params.bookID}`)
+                    if (!areReviewsOpen) navigate(`/books/${params.bookID}/reviews`)
+                    setAreReviewsOpen(!areReviewsOpen)
+                }
+                }>{!areReviewsOpen && 'Open'} {areReviewsOpen && 'Close'} Reviews</button>
+                <Outlet context={{ book, setBook }} />
             </div>
         </article>
     )
