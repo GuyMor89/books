@@ -30,6 +30,10 @@ export function BookAdd() {
         fetch(API_URL)
             .then(result => result.json())
             .then(result => {
+                if (result.numFound === 0) {
+                    showErrorMsg('Cannot find book..')
+                    navigate('/books')
+                }
                 const firstTenBooks = result.docs.slice(0, 10)
                 const parsedBooks = firstTenBooks.map(({ title, author_name }) => ({ title, author: author_name[0] }))
                 setFoundBooks(firstTenBooks)
@@ -65,6 +69,7 @@ export function BookAdd() {
 
     return (
         <article className="book-add">
+            <h2>Search Results</h2>
             {booksToDisplay && booksToDisplay.map(({ title, author }, idx) =>
                 <div key={idx}>
                     <h2>{title} <span>by {author}</span></h2>

@@ -1,9 +1,18 @@
-const { useEffect } = React
+const { useEffect, useRef } = React
 
 export function BookFilter({ changeFilterBy, filterBy }) {
 
+    let emptyListener = useRef(null)
+    const input = useRef(null)
+
     useEffect(() => {
-        return (() => changeFilterBy(event, 'reset'))
+        emptyListener = $(input.current).on('input', event => {
+            if (event.target.value === '') changeFilterBy(event, 'reset')
+        })
+        return (() => {
+            $(input.current).off('input', emptyListener)
+            changeFilterBy(event, 'reset')
+        })
     }, [])
 
     return (
@@ -11,10 +20,10 @@ export function BookFilter({ changeFilterBy, filterBy }) {
             <fieldset>
                 <legend>Filter</legend>
                 <label htmlFor="search-text">Title</label>
-                <input onChange={changeFilterBy} value={filterBy && filterBy.text || ''} type="text" name="search-text" placeholder="Search.."></input>
+                <input ref={input} onInput={changeFilterBy} defaultValue={filterBy && filterBy.text || ''} type="search" name="search-text" placeholder="Search.."></input>
                 <label htmlFor="search-price">Price</label>
                 <div>{filterBy && filterBy.price || 0}</div>
-                <input onChange={changeFilterBy} type="range" name="search-price" value={filterBy && filterBy.price || 0} min={0} max={200}></input>
+                <input onChange={changeFilterBy} type="range" name="search-price" defaultValue={filterBy && filterBy.price || 0} min={0} max={200}></input>
             </fieldset>
         </article>
     )

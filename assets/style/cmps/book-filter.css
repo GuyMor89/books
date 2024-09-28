@@ -16,7 +16,7 @@
     font-weight: 600;
 }
 
-.filter-container>fieldset>input[type="text"] {
+.filter-container>fieldset>input[type="search"] {
     padding-block: 0.25em;
     padding-inline-start: 0.35em;
 
