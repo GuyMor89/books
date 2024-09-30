@@ -7,12 +7,12 @@ export function BookFilter({ changeFilterBy, filterBy }) {
 
     useEffect(() => {
         emptyListener = $(input.current).on('input', event => {
-            if (event.target.value === '') changeFilterBy(event, 'reset')
+            if (event.target.value === '' || event.target.value === 0) changeFilterBy(undefined, 'reset')
         })
-        return (() => {
-            $(input.current).off('input', emptyListener)
-            changeFilterBy(event, 'reset')
-        })
+    }, [])
+
+    useEffect(() => {
+        if (filterBy) input.current.value = filterBy.text
     }, [])
 
     return (
@@ -20,10 +20,10 @@ export function BookFilter({ changeFilterBy, filterBy }) {
             <fieldset>
                 <legend>Filter</legend>
                 <label htmlFor="search-text">Title</label>
-                <input ref={input} onInput={changeFilterBy} defaultValue={filterBy && filterBy.text || ''} type="search" name="search-text" placeholder="Search.."></input>
+                <input ref={input} onInput={(ev) => changeFilterBy(ev)} defaultValue={filterBy && filterBy.text || ''} type="search" name="search-text" placeholder="Search.."></input>
                 <label htmlFor="search-price">Price</label>
                 <div>{filterBy && filterBy.price || 0}</div>
-                <input onChange={changeFilterBy} type="range" name="search-price" defaultValue={filterBy && filterBy.price || 0} min={0} max={200}></input>
+                <input onChange={(ev) => changeFilterBy(ev)} type="range" name="search-price" value={filterBy && filterBy.price || 0} min={0} max={200}></input>
             </fieldset>
         </article>
     )

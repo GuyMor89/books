@@ -1,10 +1,10 @@
 import { bookService } from "../services/book.service.js"
-import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
+import { utilService } from "../services/util.service.js"
+import { showErrorMsg } from "../services/event-bus.service.js"
 import { LongText } from "./LongText.jsx"
-import { AddReview } from "./AddReview.jsx"
 import { Loader } from "./Loader.jsx"
 
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
 const { useParams, useNavigate, Outlet, useLocation } = ReactRouterDOM
 
 export function BookDetails({ }) {
@@ -18,6 +18,9 @@ export function BookDetails({ }) {
     const params = useParams()
     const navigate = useNavigate()
     const location = useLocation()
+
+    const reviewsButton = useRef(null)
+    console.log(reviewsButton)
 
     useEffect(() => {
         loadBooks()
@@ -72,6 +75,19 @@ export function BookDetails({ }) {
         return newAuthors.join('')
     }
 
+    function openReviews() {
+        if (areReviewsOpen) utilService.animateCSS(reviewsButton.current, 'shakeX')
+            .then(() => {
+                navigate(`/books/${params.bookID}`)
+                setAreReviewsOpen(!areReviewsOpen)
+        })
+        if (!areReviewsOpen) utilService.animateCSS(reviewsButton.current, 'shakeY')
+            .then(() => {
+                navigate(`/books/${params.bookID}/reviews`)
+                setAreReviewsOpen(!areReviewsOpen)
+            })
+    }
+
     if (isLoading) return <Loader />
 
     const { title, authors, subtitle, description, thumbnail, pageCount, publishedDate, listPrice } = book
@@ -97,10 +113,8 @@ export function BookDetails({ }) {
                 <h6>({publishedDate}) - {evaluateBookAge()}</h6>
                 <LongText text={description} />
                 <span className={evaluatePriceColor()}>{amount} {currencyCode}</span>
-                <button onClick={() => {
-                    if (areReviewsOpen) navigate(`/books/${params.bookID}`)
-                    if (!areReviewsOpen) navigate(`/books/${params.bookID}/reviews`)
-                    setAreReviewsOpen(!areReviewsOpen)
+                <button ref={reviewsButton} onClick={() => {
+                    openReviews()
                 }
                 }>{!areReviewsOpen && 'Open'} {areReviewsOpen && 'Close'} Reviews</button>
                 <Outlet context={{ book, setBook }} />

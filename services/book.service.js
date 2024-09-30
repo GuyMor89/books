@@ -3,30 +3,29 @@ import { storageService } from './async-storage.service.js'
 import { defaultBooks } from '../services/books.js'
 
 const storageKey = 'BookDB'
-var gFilterBy = { text: '' }
 
 export const bookService = {
     query,
     get,
     remove,
     save,
-    getFilterBy,
-    setFilterBy
+    getFilterFromSearchParams,
+    cleanFilter
 }
 
-function query() {
+function query(filterBy = {}) {
     return storageService.query(storageKey)
         .then(books => {
             if (!books || !books.length > 0) {
                 utilService.saveToStorage(storageKey, defaultBooks)
                 return utilService.loadFromStorage(storageKey)
             }
-            if (gFilterBy.text) {
-                const regex = new RegExp(gFilterBy.text, 'i')
+            if (filterBy.text) {
+                const regex = new RegExp(filterBy.text, 'i')
                 books = books.filter(book => regex.test(book.title))
             }
-            if (gFilterBy.price) {
-                books = books.filter(book => book.listPrice.amount >= +gFilterBy.price)
+            if (filterBy.price) {
+                books = books.filter(book => book.listPrice.amount >= +filterBy.price)
             }
             return books
         })
@@ -48,12 +47,20 @@ function save(book) {
     }
 }
 
-function getFilterBy() {
-    return { ...gFilterBy }
+function getFilterFromSearchParams(searchParams) {
+    if (searchParams.size === 0) return {text: '', price: '' }
+
+    const newFilter = {}
+    for (let [key, value] of searchParams.entries()) {
+        newFilter[key] = value
+    }
+    return newFilter
 }
 
-function setFilterBy(filterBy = {}) {
-    if (filterBy.text !== undefined) gFilterBy.text = filterBy.text
-    if (filterBy.price !== undefined) gFilterBy.price = filterBy.price
-    return gFilterBy
+function cleanFilter(filter) {
+    const cleanFilter = {}
+    for (let key in filter) {
+        if (filter[key]) cleanFilter[key] = filter[key]
+    }
+    return cleanFilter
 }

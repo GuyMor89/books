@@ -5,55 +5,55 @@ import { BookList } from './BookList.jsx'
 import { BookFilter } from "./BookFilter.jsx"
 import { Loader } from "./Loader.jsx"
 
-const { useState, useEffect } = React
-const { useNavigate, Outlet, useLocation } = ReactRouterDOM
+const { useState, useEffect, useRef } = React
+const { useNavigate, Outlet, useLocation, useSearchParams } = ReactRouterDOM
 
 export function BookIndex() {
 
     const [books, setBooks] = useState(null)
-    const [filterBy, setFilterBy] = useState({ text: '', price: '' })
+    const [searchParams, setSearchParams] = useSearchParams()
+    const [filterBy, setFilterBy] = useState(bookService.getFilterFromSearchParams(searchParams))
     const [isLoading, setIsLoading] = useState(true)
 
-    const navigate = useNavigate()
     const location = useLocation()
 
     const isRootPath = location.pathname === '/books'
+    const debounceFilters = useRef(utilService.debounce(setFilterBy, 1000))
 
     useEffect(() => {
+        setSearchParams(bookService.cleanFilter(filterBy)) //Set only the searchParams that have been changed
         loadBooks()
     }, [filterBy])
+
+    useEffect(() => {
+       if (searchParams.size === 0) changeFilterBy(undefined, 'reset') //Reset the filterBy when the URL changes
+    }, [searchParams])
 
     useEffect(() => {
         // if (books && books.length === 0 && filterBy.text !== '') navigate(`/books/add/${filterBy.text}`)
     }, [books])
 
     function loadBooks() {
-        return bookService.query()
+        return bookService.query(filterBy)
             .then(setBooks)
             .then(() => setIsLoading(false))
     }
 
-    const debounceFilters = utilService.debounce((filter) => {
-        setFilterBy(filter)
-        bookService.setFilterBy(filter)
-    }, 1000)
+    function changeFilterBy(ev, reset) {
+        if (reset) return setFilterBy({ text: '', price: '' })
 
-    function changeFilterBy(event, reset) {
-        if (reset) {
-            setFilterBy({ text: '', price: '' })
-            return bookService.setFilterBy({ text: '', price: '' })
-        }
-        const input = event.target.value
+        const input = ev.target.value
         let newFilterBy
 
-        if (event.nativeEvent.inputType) {
+        if (ev.nativeEvent.inputType) {
             const text = input
             newFilterBy = { ...filterBy, text }
+            debounceFilters.current(newFilterBy)
         } else {
             const price = input
             newFilterBy = { ...filterBy, price }
+            setFilterBy(newFilterBy)
         }
-        debounceFilters(newFilterBy)
     }
     if (isLoading) return (
         <React.Fragment>
