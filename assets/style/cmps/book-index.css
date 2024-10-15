@@ -2,4 +2,6 @@
     position: relative;
     
     min-height: calc(100vh - 220px);
+
+    background-color: white;
 }
